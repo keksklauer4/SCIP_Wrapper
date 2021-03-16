@@ -81,6 +81,7 @@ namespace scip_wrapper
       fuint32_t createBinaryVar(double objective_coefficient = 0.0, const char *name = "");
 
       fuint32_t createLinearConstraint(double lhs, double rhs, const char* name = "");
+      fuint32_t createLinearConstraintEq(double equalVal = 0.0, const char* name = "");
       fuint32_t createLinearConstraintGeq(double lhs, const char *name = "");
       fuint32_t createLinearConstraintLeq(double rhs, const char *name = "");
 

@@ -143,6 +143,11 @@ fuint32_t SCIPSolver::createLinearConstraintGeq(double lhs, const char* name)
 }
 
 
+fuint32_t SCIPSolver::createLinearConstraintEq(double equalVal, const char* name)
+{
+  return createLinearConstraint(equalVal, equalVal, name);
+}
+
 void SCIPSolver::addToCst(fuint32_t cstIndex, fuint32_t varIndex, double coefficient)
 {
   if (m_csts.size() <= cstIndex || varIndex >= m_variables.size())

@@ -37,6 +37,24 @@ namespace milp_examples
                                  double capacity);
 
   void solve_n_queens(fuint32_t n);
+
+  struct MaxFlowEdge
+  {
+    MaxFlowEdge(fuint32_t _from, fuint32_t _to, double _capacity, double _cost)
+      : fromNode(_from), toNode(_to), capacity(_capacity), cost(_cost){}
+
+    public:
+      fuint32_t fromNode;
+      fuint32_t toNode;
+      double capacity;
+      double cost;
+  };
+
+  typedef std::vector<MaxFlowEdge> MaxFlowEdgeVec;
+  typedef std::vector<fuint32_t> NodeIDVec;
+
+  void solve_mincost_maxflow(const NodeIDVec &nodes, const MaxFlowEdgeVec &edges,
+        fuint32_t sNode, fuint32_t tNode, double targetFlow);
 }
 
 #endif
