@@ -1,8 +1,14 @@
-#include "vertex_cover.hpp"
+#include "milp_examples.hpp"
 
 using namespace scip_wrapper;
+using namespace milp_examples;
 
-void vertex_cover::solve_minimum_vertex_cover(std::vector<std::pair<fuint32_t, fuint32_t>> &edges,
+/* keksklauer4 16.03.2021
+ *
+ * Calculate a minimum weight vertex cover for a given graph using a MILP.
+ */
+
+void milp_examples::solve_minimum_vertex_cover(std::vector<EdgePair> &edges,
                                 std::vector<double> weights)
 {
   SCIPSolver solver{"mvc_model", SolverSense::MINIMIZE};
@@ -34,9 +40,37 @@ void vertex_cover::solve_minimum_vertex_cover(std::vector<std::pair<fuint32_t, f
 
   std::cout << "Retrieving solution..." << std::endl;
   fuint32_t index = 0;
+  double totalCost = 0.0;
   for (auto nodeWeightIt = weights.begin(); nodeWeightIt != weights.end(); ++nodeWeightIt, index++)
   {
-    double value = solver.getVariableValue(variables.at(index));
-    std::cout << "Node " << index << " is " << value << " -> " << (value == 1.0) << std::endl;
+    if (solver.getBinaryValue(variables.at(index)))
+    {
+      std::cout << "Node " << index << " is in (" << *nodeWeightIt << ")." << std::endl;
+      totalCost += *nodeWeightIt;
+    }
   }
+
+  std::cout << std::endl
+            << "Total cost: " << totalCost << std::endl;
+}
+
+#define PAIR(a,b) std::make_pair(a,b)
+
+int main()
+{
+  std::vector<double> weights
+    { 1, 3, 3, 2, 2};
+  std::vector<std::pair<fuint32_t, fuint32_t>> edges
+  {
+      PAIR(0,1),
+      PAIR(0,3),
+      PAIR(1,3),
+      PAIR(1,2),
+      PAIR(3,4),
+      PAIR(2,3),
+      PAIR(2,4)
+  };
+
+  milp_examples::solve_minimum_vertex_cover(edges, weights);
+
 }

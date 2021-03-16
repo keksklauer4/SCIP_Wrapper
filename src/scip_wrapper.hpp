@@ -1,6 +1,8 @@
 #ifndef SCIP_WRAPPER_HPP
 #define SCIP_WRAPPER_HPP
 
+// keksklauer4 16.03.2021
+
 #include <cinttypes>
 #include <vector>
 #include <cstring>
@@ -85,6 +87,7 @@ namespace scip_wrapper
       void addToCst(fuint32_t cstIndex, fuint32_t varIndex, double coefficient = 1.0);
 
       double getVariableValue(fuint32_t variableIndex);
+      bool getBinaryValue(fuint32_t VariableIndex);
       SCIPSolution *getSolution() { return m_solution; }
       SCIPLinearConstraint *getCst(fuint32_t index) { return index < m_csts.size() ? &m_csts.at(index) : nullptr; }
       SCIPVariable *getVar(fuint32_t index) { return index < m_variables.size() ? &m_variables.at(index) : nullptr; }

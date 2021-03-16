@@ -1,5 +1,7 @@
 #include "scip_wrapper.hpp"
 
+// keksklauer4 16.03.2021
+
 #define INF SCIPinfinity(m_scip_model)
 #define NEG_INF -SCIPinfinity(m_scip_model)
 
@@ -89,6 +91,11 @@ double SCIPSolver::getVariableValue(fuint32_t variableIndex)
   if (m_solution == nullptr) throw std::runtime_error("Solution is nullptr...");
   if (variableIndex >= m_variables.size()) throw std::range_error("Variable index out of range...");
   return SCIPgetSolVal(m_scip_model, m_solution, m_variables.at(variableIndex).variable);
+}
+
+bool SCIPSolver::getBinaryValue(fuint32_t variableIndex)
+{
+  return getVariableValue(variableIndex) > 0.5;
 }
 
 fuint32_t SCIPSolver::createVar(VariableType type, double lower_bound, double upper_bound, double objective_coefficient, const char *name)
