@@ -17,6 +17,19 @@ Apart from that do not forget to cite SCIP.
 
 using namespace scip_wrapper;
 
+/*
+ * The modell:
+ * Variables x_a and x_b
+ * Objective: max { 3.0 * x_a + x_b }
+ *
+ * Constraints:
+ * x_a + 2.0 * x_b <= 5.5
+ * 0.0 <= x_a <= 10.0
+ * 0.0 <= x_b <= 5.0
+ * x_a as integer variable
+ * x_b as real valued variable 
+ */
+
 int main()
 {
   SCIPSolver solver{"modelName", SolverSense::MAXIMIZE};
