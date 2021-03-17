@@ -1,5 +1,8 @@
 #include "milp_examples.hpp"
 
+#include <sstream>
+#include <numeric>
+
 using namespace scip_wrapper;
 using namespace milp_examples;
 
@@ -104,6 +107,70 @@ void milp_examples::team_matching_problem(const std::vector<fuint32_t> &teams,
   }
 }
 
+/*
+ * Example that that team matching is in fact NP-hard (even strongly NP-hard)
+ * The reduction works as follows:
+ * For every element in numbers, we create a member.
+ * Then, we want to generate all possible triplets of elements in the numbers vector.
+ * From each of those triplets, we generate a possible team and add preferences for
+ * the team members (the elements of the possible triplet) so that those members can
+ * be part of that team. Note that since each member must be in *exactly* one team,
+ * and each team has to have at least 3 members (and at most 3 since only three
+ * preferences are added), we gain a three partition. If the instance of the team
+ * matching problem is infeasible, then there is no 3 partition. If it is feasible,
+ * the algorithm returns the teams that were formed and which element is in which team.
+ *
+ * Note that we neither need the maximum capacity nor costs as the latter is always 0.0
+ * and the former can not be surpassed as each team has exactly 3 preferences.
+ */
+
+void reduction_from_3p(const std::vector<fuint32_t>& numbers)
+{
+  if (numbers.size() % 3 != 0) return;
+  fuint32_t m = numbers.size() / 3;
+  fuint32_t t = std::accumulate(numbers.begin(), numbers.end(), 0);
+  if (t % m != 0) return;
+  t /= m;
+
+  std::stringstream str{};
+
+  // for each element, create a member
+  std::vector<Member> members{};
+  members.reserve(numbers.size());
+  fuint32_t index = 0;
+  for (auto it = numbers.begin(); it != numbers.end(); ++it, ++index)
+  {
+    str << index << "(" << *it << ")";
+    members.push_back(Member{index, str.str()});
+    str.str(std::string()); // clear string stream
+  }
+
+  // create a team for each possible triplet
+  std::vector<fuint32_t> teams{};
+  PreferenceVec preferences{};
+  fuint32_t teamIndex = 0;
+  for (fuint32_t i = 0; i < numbers.size(); i++)
+  {
+    for (fuint32_t j = i + 1; j < numbers.size(); j++)
+    {
+      for (fuint32_t k = j + 1; k < numbers.size(); k++)
+      {
+        if (numbers.at(i) + numbers.at(j) + numbers.at(k) == t)
+        { // possible triplet found; create team and preferences
+          teams.push_back(teamIndex);
+          preferences.push_back(MemberPreferences{i, teamIndex, 0.0});
+          preferences.push_back(MemberPreferences{j, teamIndex, 0.0});
+          preferences.push_back(MemberPreferences{k, teamIndex, 0.0});
+          teamIndex++;
+        }
+      }
+    }
+  }
+
+  // now solve problem (if infeasible, then no 3 partition exists otherwise teams are the solution to 3 partition)
+  milp_examples::team_matching_problem(teams, members, preferences);
+}
+
 int main()
 {
   std::vector<fuint32_t> teams
@@ -165,4 +232,17 @@ int main()
   };
 
   milp_examples::team_matching_problem(teams, members, preferences);
+
+  std::vector<fuint32_t> threePartitionInstance1{
+    20, 23, 25, 30, 49, 45, 27, 30, 30, 40, 22, 19
+  }; // example taken from wikipedia
+
+  reduction_from_3p(threePartitionInstance1);
+
+
+  std::vector<fuint32_t> threePartitionInstance2{
+    1, 2, 5, 6, 7, 9
+  }; // example taken from wikipedia
+
+  reduction_from_3p(threePartitionInstance2);
 }
