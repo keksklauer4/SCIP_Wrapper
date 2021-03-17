@@ -81,6 +81,8 @@ void milp_examples::solve_n_queens(fuint32_t n)
   // Check solution
   std::cout << (solver.getSolution() != nullptr ? "Sucess!" : "An error occurred...") << std::endl;
 
+  if (solver.getSolution() == nullptr) return;
+
   // Output solution:
   fuint32_t amountQueens = 0;
   for (fuint32_t rowIndex = 0; rowIndex < n; rowIndex++)

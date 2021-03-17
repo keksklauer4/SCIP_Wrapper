@@ -42,6 +42,8 @@ void milp_examples::solve_mincost_maxflow(const NodeIDVec &nodes, const MaxFlowE
   // Check solution
   std::cout << (solver.getSolution() != nullptr ? "Sucess!" : "An error occurred...") << std::endl;
 
+  if (solver.getSolution() == nullptr) return;
+
   std::cout << "The solution:" << std::endl;
   double cost = 0.0;
   for (fuint32_t index = 0; index < edges.size(); index++)

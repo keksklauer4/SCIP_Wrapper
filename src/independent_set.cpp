@@ -39,6 +39,8 @@ void milp_examples::solve_independent_set(const std::vector<EdgePair> &edges,
   // Check solution
   std::cout << (solver.getSolution() != nullptr ? "Sucess!" : "An error occurred...") << std::endl;
 
+  if (solver.getSolution() == nullptr) return;
+
   // Display independent set:
   std::cout << "This is the independent set:" << std::endl;
   fuint32_t amountNodesIncluded = 0;

@@ -55,6 +55,27 @@ namespace milp_examples
 
   void solve_mincost_maxflow(const NodeIDVec &nodes, const MaxFlowEdgeVec &edges,
         fuint32_t sNode, fuint32_t tNode, double targetFlow);
+
+  struct Member
+  {
+    Member(fuint32_t _id, std::string _name)
+      :memberID(_id), name(_name){}
+    fuint32_t memberID;
+    std::string name;
+  };
+  struct MemberPreferences
+  {
+    MemberPreferences(fuint32_t _memberID, fuint32_t _teamID, double _cost)
+      : memberID(_memberID), teamID(_teamID), cost(_cost) {}
+    fuint32_t memberID;
+    fuint32_t teamID;
+    double cost; // how much would a person suffer if that person had to go to that team (lower is better)
+  };
+
+  typedef std::vector<MemberPreferences> PreferenceVec;
+  void team_matching_problem(const std::vector<fuint32_t> &teams,
+                             const std::vector<Member> &members,
+                             const PreferenceVec &preferences);
 }
 
 #endif

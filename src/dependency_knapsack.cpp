@@ -56,6 +56,8 @@ void milp_examples::solve_dependency_knapsack(const DependencyKnapsackItems &ite
   // Check solution
   std::cout << (solver.getSolution() != nullptr ? "Sucess!" : "An error occurred...") << std::endl;
 
+  if (solver.getSolution() == nullptr) return;
+
   // Display items in knapsack:
   std::cout << "Items in the dependency knapsack:" << std::endl;
   double capacityUsed = 0.0;

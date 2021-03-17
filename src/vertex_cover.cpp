@@ -38,6 +38,8 @@ void milp_examples::solve_minimum_vertex_cover(std::vector<EdgePair> &edges,
 
   std::cout << (solver.getSolution() != nullptr ? "Sucess!" : "An error occurred...") << std::endl;
 
+  if (solver.getSolution() == nullptr) return;
+
   std::cout << "Retrieving solution..." << std::endl;
   fuint32_t index = 0;
   double totalCost = 0.0;
