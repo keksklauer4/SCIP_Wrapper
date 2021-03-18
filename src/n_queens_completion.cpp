@@ -5,23 +5,34 @@ using namespace milp_examples;
 
 /* keksklauer4 16.03.2021
  *
- * An example using the scip wrapper to solve n queens problem.
+ * An example using the scip wrapper to solve n queens completion problem.
  * The problem is about the maximum queens one can place on a
  * chess board without them interfering with each other.
  *
  * Not a 100% sure whether everything is correct.
  */
 
-void milp_examples::solve_n_queens(fuint32_t n)
+void milp_examples::solve_n_queens_completion(fuint32_t n,
+          const std::set<CoordinatePair>& placed_queens)
 {
   std::vector<fuint32_t> boardVars{};
   boardVars.resize(n * n);
 
   SCIPSolver solver{"NQueensSolver", SolverSense::MAXIMIZE};
 
-  for (auto& pos : boardVars)
+  for (fuint32_t y = 0; y < n; y++)
   {
-    pos = solver.createBinaryVar(1.0);
+    for (fuint32_t x = 0; x < n; x++)
+    {
+      if (placed_queens.find(std::make_pair(x,y)) == placed_queens.end())
+      { // no queen placed
+        boardVars.at(y * n + x) = solver.createBinaryVar(1.0);
+      }
+      else
+      { // queen is placed on coordinates (x,y)
+        boardVars.at(y * n + x) = solver.createVar(VariableType::BINARY, 1.0, 1.0, 1.0);
+      }
+    }
   }
 
   // create horizontal constraints (in each row at most one queen)
@@ -109,6 +120,12 @@ void milp_examples::solve_n_queens(fuint32_t n)
 
 int main()
 {
-  milp_examples::solve_n_queens(8);
+  std::set<CoordinatePair> placedQueens{
+      CoordinatePair(0,0),
+      CoordinatePair(1,2),
+      CoordinatePair(4,7)
+  };
+
+  milp_examples::solve_n_queens_completion(8, placedQueens);
 }
 
