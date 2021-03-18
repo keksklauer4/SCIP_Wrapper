@@ -21,6 +21,11 @@ namespace scip_wrapper
 
     SCIP_Vartype getSCIPVarType(VariableType type)
     {
+      #ifdef RELAX_PROBLEM
+      // for testing purposes a quick way to just relax all variables to continuous variables
+      return SCIP_Vartype::SCIP_VARTYPE_CONTINUOUS;
+      #endif
+
       switch(type)
       {
         case VariableType::BINARY: return SCIP_Vartype::SCIP_VARTYPE_BINARY;
@@ -70,10 +75,11 @@ SCIPSolver::~SCIPSolver()
   }
 }
 
-void SCIPSolver::solve()
+bool SCIPSolver::solve()
 {
   SCIP_CALL_EXC(SCIPsolve(m_scip_model));
   m_solution = SCIPgetBestSol(m_scip_model);
+  return m_solution != nullptr;
 }
 
 void SCIPSolver::setNbVars(fuint32_t nb)
@@ -121,6 +127,22 @@ fuint32_t SCIPSolver::createVarLowerBounded(VariableType type, double lower_boun
 fuint32_t SCIPSolver::createBinaryVar(double objective_coefficient, const char *name)
 {
   return createVar(VariableType::BINARY, 0.0, 1.0, objective_coefficient, name);
+}
+
+
+fuint32_t SCIPSolver::createIntVar(double lower_bound, double upper_bound, double objective_coefficient, const char *name)
+{
+  return createVar(VariableType::INTEGER, lower_bound, upper_bound, objective_coefficient, name);
+}
+
+fuint32_t SCIPSolver::createIntVarUpperBounded(double upper_bound, double objective_coefficient, const char *name)
+{
+  return createVar(VariableType::INTEGER, NEG_INF, upper_bound, objective_coefficient, name);
+}
+
+fuint32_t SCIPSolver::createIntVarLowerBounded(double lower_bound, double objective_coefficient, const char *name)
+{
+  return createVar(VariableType::INTEGER, lower_bound, INF, objective_coefficient, name);
 }
 
 fuint32_t SCIPSolver::createLinearConstraint(double lhs, double rhs, const char* name)

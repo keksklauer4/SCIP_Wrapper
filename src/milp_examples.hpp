@@ -76,6 +76,19 @@ namespace milp_examples
   void team_matching_problem(const std::vector<fuint32_t> &teams,
                              const std::vector<Member> &members,
                              const PreferenceVec &preferences);
+
+  struct LongestPathResult
+  {
+    std::multimap<fuint32_t, fuint32_t> edgesContained;
+    fuint32_t startNode;
+    fuint32_t endNode;
+    fuint32_t length;
+  };
+
+  void longest_path_problem_catan(const std::vector<EdgePair> &edges,
+                                  const std::vector<fuint32_t> &nodes,
+                                  LongestPathResult& res);
 }
+
 
 #endif
