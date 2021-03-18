@@ -5,6 +5,8 @@
 #include <map>
 #include <set>
 #include <array>
+#include <algorithm>
+#include <array>
 
 #include "scip_wrapper.hpp"
 
@@ -91,7 +93,19 @@ namespace milp_examples
   void longest_path_problem_catan(const std::vector<EdgePair> &edges,
                                   const std::vector<fuint32_t> &nodes,
                                   LongestPathResult& res);
-}
 
+  struct EdgeWithCost
+  {
+    EdgeWithCost(fuint32_t _from, fuint32_t _to, double _cost)
+      : fromNode(_from), toNode(_to), cost(_cost) {}
+    fuint32_t fromNode;
+    fuint32_t toNode;
+    double cost;
+  };
+
+  void travelling_salesman_problem(const std::vector<fuint32_t> &nodes,
+                                   const std::vector<EdgeWithCost> &edges,
+                                   fuint32_t startNode);
+}
 
 #endif

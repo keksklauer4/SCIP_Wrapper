@@ -5,6 +5,7 @@ g++ ../src/scip_wrapper.cpp ../src/n_queens_completion.cpp -L/usr/local/lib -lsc
 g++ ../src/scip_wrapper.cpp ../src/min_cost_flow.cpp -L/usr/local/lib -lscip -o min_cost_flow_test
 g++ ../src/scip_wrapper.cpp ../src/min_team_matching.cpp -L/usr/local/lib -lscip -o min_team_matching_test
 g++ ../src/scip_wrapper.cpp ../src/longest_path_catan.cpp -L/usr/local/lib -lscip -o longest_path_catan
+g++ ../src/scip_wrapper.cpp ../src/tsp.cpp -L/usr/local/lib -lscip -o tsp_test
 
 
 g++ ../src/scip_wrapper.cpp ../src/trivial_examples.cpp -L/usr/local/lib -lscip -o trivial_examples
