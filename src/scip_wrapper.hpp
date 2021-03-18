@@ -16,6 +16,9 @@
 
 #include "../external/scip_exception.hpp"
 
+
+// #define RELAX_PROBLEM // allows testing a relaxation
+
 namespace scip_wrapper
 {
   typedef uint_fast32_t fuint32_t;
@@ -71,7 +74,7 @@ namespace scip_wrapper
       ~SCIPSolver();
 
     public:
-      void solve();
+      bool solve();
       void setNbVars(fuint32_t nb);
       void setNbCsts(fuint32_t nb);
 
@@ -79,6 +82,9 @@ namespace scip_wrapper
       fuint32_t createVarUpperBounded(VariableType type, double upper_bound, double objective_coefficient = 0.0, const char *name = "");
       fuint32_t createVarLowerBounded(VariableType type, double lower_bound, double objective_coefficient = 0.0, const char *name = "");
       fuint32_t createBinaryVar(double objective_coefficient = 0.0, const char *name = "");
+      fuint32_t createIntVar(double lower_bound, double upper_bound, double objective_coefficient = 0.0, const char *name = "");
+      fuint32_t createIntVarUpperBounded(double upper_bound, double objective_coefficient = 0.0, const char *name = "");
+      fuint32_t createIntVarLowerBounded(double lower_bound, double objective_coefficient = 0.0, const char *name = "");
 
       fuint32_t createLinearConstraint(double lhs, double rhs, const char* name = "");
       fuint32_t createLinearConstraintEq(double equalVal = 0.0, const char* name = "");

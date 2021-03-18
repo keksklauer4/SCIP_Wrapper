@@ -27,19 +27,18 @@ using namespace scip_wrapper;
  * 0.0 <= x_a <= 10.0
  * 0.0 <= x_b <= 5.0
  * x_a as integer variable
- * x_b as real valued variable 
+ * x_b as real valued variable
  */
 
 int main()
 {
   SCIPSolver solver{"modelName", SolverSense::MAXIMIZE};
-  fuint32_t varAIndex = solver.createVar(VariableType::INTEGER, 0.0, 10.0, 3.0); // coefficient of variable A in objective function is 3.0
+  fuint32_t varAIndex = solver.createIntVar(0.0, 10.0, 3.0); // coefficient of variable A in objective function is 3.0
   fuint32_t varBIndex = solver.createVar(VariableType::CONTINUOUS, 0.0, 5.0, 1.0);
   fuint32_t constraint = solver.createLinearConstraintLeq(5.5);
   solver.addToCst(constraint, varAIndex);      // coefficient of variable A is 1.0
   solver.addToCst(constraint, varBIndex, 2.0); // coefficient of variable B is 2.0
-  solver.solve();
-  if (solver.getSolution() != nullptr)
+  if (solver.solve())
   {
     std::cout << "Value of A: " << solver.getVariableValue(varAIndex) << std::endl;
     std::cout << "Value of B: " << solver.getVariableValue(varBIndex) << std::endl;
@@ -49,7 +48,7 @@ int main()
 ```
 Output:
 ```
-Value of A: 5.0
+Value of A: 5
 Value of B: 0.25
 ```
 
@@ -62,7 +61,8 @@ Apart from that, you add variables to constraints using the indices using ```sol
 I wrote some examples for how to use the wrapper:
 - [Independent set](https://github.com/keksklauer4/SCIP_Wrapper/blob/master/src/independent_set.cpp): Find the maximum independent set in a graph using a MILP.
 - [Vertex cover](https://github.com/keksklauer4/SCIP_Wrapper/blob/master/src/vertex_cover.cpp): Find the minimum cost vertex cover in a graph using a MILP.
-- [Dependency Knapsack](https://github.com/keksklauer4/SCIP_Wrapper/blob/master/src/dependency_knapsack.cpp): Use as much capacity of a knapsack while taking into account dependencies of items (certain items can only be included in the knapsack if other items that the item depends on are included as well). 
-- [n queens](https://github.com/keksklauer4/SCIP_Wrapper/blob/master/src/n_queens.cpp): Find the maximum number of queens not interfering with each other that can be placed on a chess board.
+- [Dependency Knapsack](https://github.com/keksklauer4/SCIP_Wrapper/blob/master/src/dependency_knapsack.cpp): Use as much capacity of a knapsack while taking into account dependencies of items (certain items can only be included in the knapsack if other items that the item depends on are included as well).
+- [n queens](https://github.com/keksklauer4/SCIP_Wrapper/blob/master/src/n_queens.cpp): Find the maximum number of queens not interfering with each other that can be placed on a chess board. For n queens, there is a polynomial time algorithm to solve the problem. This ILP can easily be adapted to n queens completion where a number of queens is already placed.
 - [min-cost flow](https://github.com/keksklauer4/SCIP_Wrapper/blob/master/src/min_cost_flow.cpp): A classical example of a LP. Find the cheapest  flow in a graph with given flow value. Usually this is calculated using a network simplex algorithm (which is specialized and typically much faster). Regardless of that, one can see how to use this wrapper.
 - [minimum team matching](https://github.com/keksklauer4/SCIP_Wrapper/blob/master/src/min_team_matching.cpp): This is a problem I found on Reddit. It is about forming teams with at least 3 and at most 5 members while minimizing costs. It turns out this problem is strongly NP-hard which I showed exemplarily through a reduction from [3-Partition](https://en.wikipedia.org/wiki/3-partition_problem). The reduction is implemented in the same file and two example problem instances of the 3-partition problem are solved using the reduction (both taken from Wikipedia).
+- [Longest Path bounded degree 3](https://github.com/keksklauer4/SCIP_Wrapper/blob/master/src/longest_path_catan.cpp): It's about finding the longest edge disjoint path in a cyclic graph with maximum degree of 3. A vertex can be travelled to multiple times (trivially, at most twice). Start and end vertices are not predefined. The problem is motivated by a board game, [Siedler von Catan](https://www.catan.de/), in which one gets points for the longest trade route. Btw. I am not sure whether this problem is NP-hard (probably it is).
