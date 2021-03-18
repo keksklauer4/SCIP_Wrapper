@@ -3,6 +3,7 @@
 
 #include <utility>
 #include <map>
+#include <set>
 #include <array>
 
 #include "scip_wrapper.hpp"
@@ -36,7 +37,9 @@ namespace milp_examples
                                  const DependencyVec &dependencies,
                                  double capacity);
 
-  void solve_n_queens(fuint32_t n);
+
+  typedef std::pair<fuint32_t, fuint32_t> CoordinatePair;
+  void solve_n_queens_completion(fuint32_t n, const std::set<CoordinatePair>& placed_queens);
 
   struct MaxFlowEdge
   {
