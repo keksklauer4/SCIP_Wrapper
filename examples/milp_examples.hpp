@@ -8,7 +8,7 @@
 #include <algorithm>
 #include <array>
 
-#include "scip_wrapper.hpp"
+#include "../src/scip_wrapper.hpp"
 
 // just tests for scip_wrapper stuff...
 namespace milp_examples
