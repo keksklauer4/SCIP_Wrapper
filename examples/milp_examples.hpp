@@ -111,6 +111,9 @@ namespace milp_examples
                         const std::vector<EdgePair> &edges);
 
   void three_partition(const std::vector<fuint32_t> &numbers);
+
+  void max_clique(const std::vector<fuint32_t> &nodes,
+                  const std::vector<EdgePair> &edges);
 }
 
 #endif

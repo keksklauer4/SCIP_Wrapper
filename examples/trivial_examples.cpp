@@ -1,4 +1,4 @@
-#include "scip_wrapper.hpp"
+#include "../src/scip_wrapper.hpp"
 
 using namespace scip_wrapper;
 

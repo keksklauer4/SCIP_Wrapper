@@ -10,6 +10,7 @@ g++ ../src/scip_wrapper.cpp ../examples/longest_path_catan.cpp -L/usr/local/lib 
 g++ ../src/scip_wrapper.cpp ../examples/tsp.cpp -L/usr/local/lib -lscip -o ../bin/tsp_test
 g++ ../src/scip_wrapper.cpp ../examples/chromatic_number.cpp -L/usr/local/lib -lscip -o ../bin/chromatic_number_test
 g++ ../src/scip_wrapper.cpp ../examples/three_partition.cpp -L/usr/local/lib -lscip -o ../bin/three_partition_test
+g++ ../src/scip_wrapper.cpp ../examples/max_clique.cpp -L/usr/local/lib -lscip -o ../bin/max_clique_test
 
 
 g++ ../src/scip_wrapper.cpp ../examples/trivial_examples.cpp -L/usr/local/lib -lscip -o ../bin/trivial_examples_test
