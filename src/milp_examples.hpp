@@ -106,6 +106,11 @@ namespace milp_examples
   void travelling_salesman_problem(const std::vector<fuint32_t> &nodes,
                                    const std::vector<EdgeWithCost> &edges,
                                    fuint32_t startNode);
+
+  void chromatic_number(const std::vector<fuint32_t> &nodes,
+                        const std::vector<EdgePair> &edges);
+
+  void three_partition(const std::vector<fuint32_t> &numbers);
 }
 
 #endif
