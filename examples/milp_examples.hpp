@@ -102,6 +102,7 @@ namespace milp_examples
     fuint32_t toNode;
     double cost;
   };
+  typedef EdgeWithCost weight_edge_t;
 
   void travelling_salesman_problem(const std::vector<fuint32_t> &nodes,
                                    const std::vector<EdgeWithCost> &edges,
@@ -114,6 +115,9 @@ namespace milp_examples
 
   void max_clique(const std::vector<fuint32_t> &nodes,
                   const std::vector<EdgePair> &edges);
+
+  void weighted_max_cut(const std::vector<fuint32_t> &nodes,
+                        const std::vector<weight_edge_t> &edges);
 }
 
 #endif
