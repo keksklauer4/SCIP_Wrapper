@@ -9,6 +9,7 @@
 #include <string>
 #include <iostream>
 #include <exception>
+#include <limits>
 
 // SCIP stuff
 #include <scip/scip.h>
@@ -24,6 +25,10 @@ namespace scip_wrapper
   typedef uint_fast32_t fuint32_t;
   typedef SCIP_SOL SCIPSolution;
   typedef SCIP SCIPModel;
+
+  const double EPSILON = std::numeric_limits<double>::min(); // minimal positive double value
+  const double NEG_EPSILON = -EPSILON; // maximal negative double value
+
   enum SolverSense
   {
     MINIMIZE = +1,
@@ -90,6 +95,7 @@ namespace scip_wrapper
       fuint32_t createLinearConstraintEq(double equalVal = 0.0, const char* name = "");
       fuint32_t createLinearConstraintGeq(double lhs, const char *name = "");
       fuint32_t createLinearConstraintLeq(double rhs, const char *name = "");
+      void createUnequalConstraint(fuint32_t x1, fuint32_t x2, double largeNb);
 
       void addToCst(fuint32_t cstIndex, fuint32_t varIndex, double coefficient = 1.0);
 

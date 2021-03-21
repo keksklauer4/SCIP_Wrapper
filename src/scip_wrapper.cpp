@@ -170,6 +170,22 @@ fuint32_t SCIPSolver::createLinearConstraintEq(double equalVal, const char* name
   return createLinearConstraint(equalVal, equalVal, name);
 }
 
+
+void SCIPSolver::createUnequalConstraint(fuint32_t x1, fuint32_t x2, double largeNb)
+{ // only for integer/binary values
+  // two constraints and one binary variable
+  fuint32_t yVar = createBinaryVar(0.0);
+  fuint32_t constraint1 = createLinearConstraintGeq(1.0);
+  addToCst(constraint1, x1, 1.0);
+  addToCst(constraint1, x2, -1.0);
+  addToCst(constraint1, yVar, largeNb);
+
+  fuint32_t constraint2 = createLinearConstraintLeq(largeNb - 1.0);
+  addToCst(constraint2, x1, 1.0);
+  addToCst(constraint2, x2, -1.0);
+  addToCst(constraint2, yVar, largeNb);
+}
+
 void SCIPSolver::addToCst(fuint32_t cstIndex, fuint32_t varIndex, double coefficient)
 {
   if (m_csts.size() <= cstIndex || varIndex >= m_variables.size())
