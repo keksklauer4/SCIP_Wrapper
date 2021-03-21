@@ -66,7 +66,7 @@ Thus,
 
 ```make all``` for all examples.
 
-```make name``` for specific examples (name could be ```chromatic number```, ```tsp``` etc.)
+```make <name>``` for specific examples (```<name>``` could be ```chromatic number```, ```tsp``` etc.)
 
 ## Examples
 I wrote some examples for how to use the wrapper:
