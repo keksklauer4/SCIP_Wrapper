@@ -57,6 +57,11 @@ The return values are indices for fetching the variables from internal ```std::v
 You use the indices to get variables' values (after solving) using ```solver.getVariableValue(variableIndex)``` or ```solver.getBinaryValue(variableIndex)```.
 Apart from that, you add variables to constraints using the indices using ```solver.addToCst(constraintIndex, variableIndex, 1.0)```.
 
+## How to run?
+You will have to get [SCIP](https://www.scipopt.org/index.php#download), more specifically, the scipoptsuite (I tested with version ```7.0.1```).
+I built it using ```make install```. Then just run make all in the root folder of this project and the binaries for the different examples should lie in ```bin/```.
+You can build specific examples using their respective name (for examples ```make rectangle_packing``` since the file is called ```rectangle_packing.cpp```).
+
 ## Examples
 I wrote some examples for how to use the wrapper:
 - [Independent set](https://github.com/keksklauer4/SCIP_Wrapper/blob/master/example/independent_set.cpp): Find the maximum independent set in a graph using a MILP.

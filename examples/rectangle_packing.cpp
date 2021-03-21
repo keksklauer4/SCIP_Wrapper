@@ -47,8 +47,8 @@ namespace
   {
     std::ofstream file;
     file.open(filename);
-    file << "<svg height=\"" << yLength << "\" width=\"" << xLength << "\">"
-         << "<style> .rectName { font: bold 30px sans-serif; fill: red; }</style>";
+    file << "<svg height=\"" << yLength << "\" width=\"" << xLength << "\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 "
+         << xLength << " " << yLength << "\">" << "<style> .rectName { font: bold 30px sans-serif; fill: red; }</style>";
 
     createSVGRect(file, 0, 0, xLength, yLength);
     for (const auto& rect : rects)
