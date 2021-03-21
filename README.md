@@ -63,7 +63,9 @@ I built it using ```make install```.
 Then just run ```make all``` in the root folder of this project and the binaries for the different examples should lie in ```bin/```.
 You can build specific examples using their respective name (for examples ```make rectangle_packing``` since the file is called ```rectangle_packing.cpp```).
 Thus,
+
 ```make all``` for all examples.
+
 ```make name``` for specific examples (name could be ```chromatic number```, ```tsp``` etc.)
 
 ## Examples
