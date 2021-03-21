@@ -118,6 +118,24 @@ namespace milp_examples
 
   void weighted_max_cut(const std::vector<fuint32_t> &nodes,
                         const std::vector<weight_edge_t> &edges);
+
+  typedef struct Rectangle
+  {
+    Rectangle(double _x_length, double _y_length, std::string _name)
+      : x_length(_x_length), y_length(_y_length), x(_x_length), y(_y_length),
+        included(false), name(_name){}
+
+    double getArea() { return x_length * y_length; }
+    double x;
+    double y;
+    bool included;
+    double x_length;
+    double y_length;
+    std::string name;
+  } rectangle_t;
+
+  void rectangle_packing(std::vector<rectangle_t> &rects, double xLength, double yLength);
+
 }
 
 #endif

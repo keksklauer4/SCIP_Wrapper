@@ -12,6 +12,7 @@ g++ ../src/scip_wrapper.cpp ../examples/chromatic_number.cpp -L/usr/local/lib -l
 g++ ../src/scip_wrapper.cpp ../examples/three_partition.cpp -L/usr/local/lib -lscip -o ../bin/three_partition_test
 g++ ../src/scip_wrapper.cpp ../examples/max_clique.cpp -L/usr/local/lib -lscip -o ../bin/max_clique_test
 g++ ../src/scip_wrapper.cpp ../examples/weighted_max_cut.cpp -L/usr/local/lib -lscip -o ../bin/weighted_max_cut_test
+g++ ../src/scip_wrapper.cpp ../examples/rectangle_packing.cpp -L/usr/local/lib -lscip -o ../bin/rectangle_packing_test
 
 
 g++ ../src/scip_wrapper.cpp ../examples/trivial_examples.cpp -L/usr/local/lib -lscip -o ../bin/trivial_examples_test
