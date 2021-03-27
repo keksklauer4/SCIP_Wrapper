@@ -6,7 +6,7 @@ using namespace milp_examples;
 void milp_examples::weighted_max_cut(const std::vector<fuint32_t>& nodes,
                                      const std::vector<weight_edge_t>& edges)
 {
-  SCIPSolver solver{"MaxCutSolver", SolverSense::MAXIMIZE};
+  MILPSolver solver{"MaxCutSolver", SolverSense::MAXIMIZE};
 
   // for each node there is a binary var denoting in which set of the partitioning that node is
   std::map<fuint32_t, fuint32_t> nodeVars{};

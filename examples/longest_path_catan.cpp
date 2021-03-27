@@ -9,7 +9,7 @@ void milp_examples::longest_path_problem_catan(const std::vector<EdgePair> &edge
                                 const std::vector<fuint32_t> &nodes,
                                 LongestPathResult& res)
 {
-  SCIPSolver solver{"longestPathSolver", SolverSense::MAXIMIZE};
+  MILPSolver solver{"longestPathSolver", SolverSense::MAXIMIZE};
 
 
   // create inflow and outflow variables (that act as s/t nodes)

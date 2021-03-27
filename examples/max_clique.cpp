@@ -7,7 +7,7 @@ using namespace milp_examples;
 void milp_examples::max_clique(const std::vector<fuint32_t>& nodes,
                                const std::vector<EdgePair>& edges)
 {
-  SCIPSolver solver{"MaxCliqueSolver", SolverSense::MAXIMIZE};
+  MILPSolver solver{"MaxCliqueSolver", SolverSense::MAXIMIZE};
 
   fuint32_t amountNodesInCliqueVar = solver.createIntVarLowerBounded(0.0);
   fuint32_t amountNodesCst = solver.createLinearConstraintEq();

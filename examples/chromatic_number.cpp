@@ -11,7 +11,7 @@ using namespace milp_examples;
 void milp_examples::chromatic_number(const std::vector<fuint32_t> &nodes,
                       const std::vector<EdgePair> &edges)
 {
-  SCIPSolver solver{"chromaticNumberSolver", SolverSense::MINIMIZE};
+  MILPSolver solver{"chromaticNumberSolver", SolverSense::MINIMIZE};
   solver.setLogging();
 
   fuint32_t targetNumber = solver.createVarLowerBounded(CONTINUOUS, 0.0, 1.0);

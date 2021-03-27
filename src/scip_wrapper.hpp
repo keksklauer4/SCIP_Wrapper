@@ -72,11 +72,11 @@ namespace scip_wrapper
     void *custom;
   };
 
-  class SCIPSolver
+  class MILPSolver
   {
     public:
-      SCIPSolver(std::string name, SolverSense sense);
-      ~SCIPSolver();
+      MILPSolver(std::string name, SolverSense sense);
+      ~MILPSolver();
 
     public:
       bool solve();

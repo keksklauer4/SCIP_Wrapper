@@ -17,7 +17,7 @@ void milp_examples::solve_dependency_knapsack(const DependencyKnapsackItems &ite
 {
   std::map<fuint32_t, fuint32_t> itemIndices{};
 
-  SCIPSolver solver{"DependencyKnapsack", SolverSense::MAXIMIZE};
+  MILPSolver solver{"DependencyKnapsack", SolverSense::MAXIMIZE};
 
   // create variables for items
   for (auto it = items.begin(); it != items.end(); ++it)

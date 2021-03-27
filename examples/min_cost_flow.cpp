@@ -15,7 +15,7 @@ void milp_examples::solve_mincost_maxflow(const NodeIDVec &nodes, const MaxFlowE
   std::vector<fuint32_t> edgeVars{};
   edgeVars.reserve(edges.size());
 
-  SCIPSolver solver{"MinCostFlowSolver", SolverSense::MINIMIZE};
+  MILPSolver solver{"MinCostFlowSolver", SolverSense::MINIMIZE};
 
   for (auto node : nodes)
   {

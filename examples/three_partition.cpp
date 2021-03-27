@@ -34,7 +34,7 @@ void milp_examples::three_partition(const std::vector<fuint32_t> &numbers)
   }
   t /= m;
 
-  SCIPSolver solver{"3PartitionSolver", SolverSense::MAXIMIZE};
+  MILPSolver solver{"3PartitionSolver", SolverSense::MAXIMIZE};
 
   std::vector<fuint32_t> numberCsts{};
   numberCsts.resize(numbers.size());

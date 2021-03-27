@@ -11,7 +11,7 @@ using namespace milp_examples;
 void milp_examples::solve_minimum_vertex_cover(std::vector<EdgePair> &edges,
                                 std::vector<double> weights)
 {
-  SCIPSolver solver{"mvc_model", SolverSense::MINIMIZE};
+  MILPSolver solver{"mvc_model", SolverSense::MINIMIZE};
 
   // reserve space for variables and constraints:
   solver.setNbVars(weights.size());

@@ -32,7 +32,7 @@ using namespace scip_wrapper;
 
 int main()
 {
-  SCIPSolver solver{"modelName", SolverSense::MAXIMIZE};
+  MILPSolver solver{"modelName", SolverSense::MAXIMIZE};
   fuint32_t varAIndex = solver.createIntVar(0.0, 10.0, 3.0); // coefficient of variable A in objective function is 3.0
   fuint32_t varBIndex = solver.createVar(VariableType::CONTINUOUS, 0.0, 5.0, 1.0);
   fuint32_t constraint = solver.createLinearConstraintLeq(5.5);

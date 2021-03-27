@@ -18,7 +18,7 @@ void milp_examples::team_matching_problem(const std::vector<fuint32_t> &teams,
       const std::vector<Member> &members,
       const PreferenceVec &preferences)
 {
-  SCIPSolver solver{"TeamMatchingProblem", SolverSense::MINIMIZE};
+  MILPSolver solver{"TeamMatchingProblem", SolverSense::MINIMIZE};
 
   // for every team, there is binary variable whether it is formed
   // and two constraints enforcing capacity (minNbInTeam <= val <= maxNbInTeam if the team is formed)

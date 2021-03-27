@@ -18,7 +18,7 @@ void milp_examples::solve_n_queens_completion(fuint32_t n,
   std::vector<fuint32_t> boardVars{};
   boardVars.resize(n * n);
 
-  SCIPSolver solver{"NQueensSolver", SolverSense::MAXIMIZE};
+  MILPSolver solver{"NQueensSolver", SolverSense::MAXIMIZE};
 
   for (fuint32_t y = 0; y < n; y++)
   {

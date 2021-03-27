@@ -43,7 +43,7 @@ void SCIPLinearConstraint::addVariable(SCIP* scip, SCIPVariable &var, double coe
 }
 
 
-SCIPSolver::SCIPSolver(std::string name, SolverSense sense)
+MILPSolver::MILPSolver(std::string name, SolverSense sense)
   : m_name(name)
 {
   SCIP_CALL_EXC(SCIPcreate(&m_scip_model));
@@ -52,7 +52,7 @@ SCIPSolver::SCIPSolver(std::string name, SolverSense sense)
   SCIP_CALL_EXC(SCIPsetObjsense(m_scip_model, getSCIPObjSense(sense)));
 }
 
-SCIPSolver::~SCIPSolver()
+MILPSolver::~MILPSolver()
 {
   try
   {
@@ -75,36 +75,36 @@ SCIPSolver::~SCIPSolver()
   }
 }
 
-bool SCIPSolver::solve()
+bool MILPSolver::solve()
 {
   SCIP_CALL_EXC(SCIPsolve(m_scip_model));
   m_solution = SCIPgetBestSol(m_scip_model);
   return m_solution != nullptr;
 }
 
-void SCIPSolver::setNbVars(fuint32_t nb)
+void MILPSolver::setNbVars(fuint32_t nb)
 {
   if (m_variables.size() < nb) m_variables.reserve(nb);
 }
 
-void SCIPSolver::setNbCsts(fuint32_t nb)
+void MILPSolver::setNbCsts(fuint32_t nb)
 {
   if (m_csts.size() < nb) m_csts.reserve(nb);
 }
 
-double SCIPSolver::getVariableValue(fuint32_t variableIndex)
+double MILPSolver::getVariableValue(fuint32_t variableIndex)
 {
   if (m_solution == nullptr) throw std::runtime_error("Solution is nullptr...");
   if (variableIndex >= m_variables.size()) throw std::range_error("Variable index out of range...");
   return SCIPgetSolVal(m_scip_model, m_solution, m_variables.at(variableIndex).variable);
 }
 
-bool SCIPSolver::getBinaryValue(fuint32_t variableIndex)
+bool MILPSolver::getBinaryValue(fuint32_t variableIndex)
 {
   return getVariableValue(variableIndex) > 0.5;
 }
 
-fuint32_t SCIPSolver::createVar(VariableType type, double lower_bound, double upper_bound, double objective_coefficient, const char *name)
+fuint32_t MILPSolver::createVar(VariableType type, double lower_bound, double upper_bound, double objective_coefficient, const char *name)
 {
   m_variables.push_back(SCIPVariable{});
   SCIP_CALL_EXC(SCIPcreateVar(m_scip_model, &m_variables.back().variable, name,
@@ -114,38 +114,38 @@ fuint32_t SCIPSolver::createVar(VariableType type, double lower_bound, double up
   return m_variables.size() - 1;
 }
 
-fuint32_t SCIPSolver::createVarUpperBounded(VariableType type, double upper_bound, double objective_coefficient, const char *name)
+fuint32_t MILPSolver::createVarUpperBounded(VariableType type, double upper_bound, double objective_coefficient, const char *name)
 {
   return createVar(type, NEG_INF, upper_bound, objective_coefficient, name);
 }
 
-fuint32_t SCIPSolver::createVarLowerBounded(VariableType type, double lower_bound, double objective_coefficient, const char *name)
+fuint32_t MILPSolver::createVarLowerBounded(VariableType type, double lower_bound, double objective_coefficient, const char *name)
 {
   return createVar(type, lower_bound, INF, objective_coefficient, name);
 }
 
-fuint32_t SCIPSolver::createBinaryVar(double objective_coefficient, const char *name)
+fuint32_t MILPSolver::createBinaryVar(double objective_coefficient, const char *name)
 {
   return createVar(VariableType::BINARY, 0.0, 1.0, objective_coefficient, name);
 }
 
 
-fuint32_t SCIPSolver::createIntVar(double lower_bound, double upper_bound, double objective_coefficient, const char *name)
+fuint32_t MILPSolver::createIntVar(double lower_bound, double upper_bound, double objective_coefficient, const char *name)
 {
   return createVar(VariableType::INTEGER, lower_bound, upper_bound, objective_coefficient, name);
 }
 
-fuint32_t SCIPSolver::createIntVarUpperBounded(double upper_bound, double objective_coefficient, const char *name)
+fuint32_t MILPSolver::createIntVarUpperBounded(double upper_bound, double objective_coefficient, const char *name)
 {
   return createVar(VariableType::INTEGER, NEG_INF, upper_bound, objective_coefficient, name);
 }
 
-fuint32_t SCIPSolver::createIntVarLowerBounded(double lower_bound, double objective_coefficient, const char *name)
+fuint32_t MILPSolver::createIntVarLowerBounded(double lower_bound, double objective_coefficient, const char *name)
 {
   return createVar(VariableType::INTEGER, lower_bound, INF, objective_coefficient, name);
 }
 
-fuint32_t SCIPSolver::createLinearConstraint(double lhs, double rhs, const char* name)
+fuint32_t MILPSolver::createLinearConstraint(double lhs, double rhs, const char* name)
 {
   m_csts.push_back(SCIPLinearConstraint{});
   SCIP_CALL_EXC(SCIPcreateConsLinear(m_scip_model, &m_csts.back().constraint, name,
@@ -154,24 +154,24 @@ fuint32_t SCIPSolver::createLinearConstraint(double lhs, double rhs, const char*
   return m_csts.size() - 1;
 }
 
-fuint32_t SCIPSolver::createLinearConstraintLeq(double rhs, const char* name)
+fuint32_t MILPSolver::createLinearConstraintLeq(double rhs, const char* name)
 {
   return createLinearConstraint(NEG_INF, rhs, name);
 }
 
-fuint32_t SCIPSolver::createLinearConstraintGeq(double lhs, const char* name)
+fuint32_t MILPSolver::createLinearConstraintGeq(double lhs, const char* name)
 {
   return createLinearConstraint(lhs, INF, name);
 }
 
 
-fuint32_t SCIPSolver::createLinearConstraintEq(double equalVal, const char* name)
+fuint32_t MILPSolver::createLinearConstraintEq(double equalVal, const char* name)
 {
   return createLinearConstraint(equalVal, equalVal, name);
 }
 
 
-void SCIPSolver::createUnequalConstraint(fuint32_t x1, fuint32_t x2, double largeNb)
+void MILPSolver::createUnequalConstraint(fuint32_t x1, fuint32_t x2, double largeNb)
 { // only for integer/binary values
   // two constraints and one binary variable
   fuint32_t yVar = createBinaryVar(0.0);
@@ -186,7 +186,7 @@ void SCIPSolver::createUnequalConstraint(fuint32_t x1, fuint32_t x2, double larg
   addToCst(constraint2, yVar, largeNb);
 }
 
-void SCIPSolver::addToCst(fuint32_t cstIndex, fuint32_t varIndex, double coefficient)
+void MILPSolver::addToCst(fuint32_t cstIndex, fuint32_t varIndex, double coefficient)
 {
   if (m_csts.size() <= cstIndex || varIndex >= m_variables.size())
     throw std::range_error("Out of range in adding to constraint...");

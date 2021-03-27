@@ -13,7 +13,7 @@ void milp_examples::solve_independent_set(const std::vector<EdgePair> &edges,
 {
   std::map<fuint32_t, fuint32_t> nodeIndices{}; // key: nodeID ; value: index of the corresponding variable
 
-  SCIPSolver solver{"IndependentSetTest", SolverSense::MAXIMIZE};
+  MILPSolver solver{"IndependentSetTest", SolverSense::MAXIMIZE};
 
   // create variables
   for (auto it = nodes.begin(); it != nodes.end(); ++it)

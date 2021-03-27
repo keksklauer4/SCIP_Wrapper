@@ -10,7 +10,7 @@ const double sufficientlyLarge = 1000000.0;
 namespace
 {
   const std::string svgColors[] = {"red", "blue", "cyan", "purple", "green", "yellow", "pink", "gray", "orange", "darkgreen", "darkred"};
-  fuint32_t createCst(SCIPSolver &solver, double length, fuint32_t xA, fuint32_t xB)
+  fuint32_t createCst(MILPSolver &solver, double length, fuint32_t xA, fuint32_t xB)
   {
     fuint32_t cstVar = solver.createBinaryVar(0.0);
     fuint32_t cstLowerCst = solver.createLinearConstraintLeq(length);
@@ -65,7 +65,7 @@ namespace
 
 void milp_examples::rectangle_packing(std::vector<rectangle_t>& rects, double xLength, double yLength)
 {
-  SCIPSolver solver{"RectPacking", SolverSense::MINIMIZE};
+  MILPSolver solver{"RectPacking", SolverSense::MINIMIZE};
 
   std::vector<std::pair<fuint32_t, fuint32_t>> coordVars{};
   std::vector<fuint32_t> includedVars{};

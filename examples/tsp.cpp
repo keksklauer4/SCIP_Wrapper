@@ -21,7 +21,7 @@ void milp_examples::travelling_salesman_problem(const std::vector<fuint32_t> &no
   double n = nodes.size();
   edgeVars.reserve(edges.size());
 
-  SCIPSolver solver{"TspSolver", SolverSense::MINIMIZE};
+  MILPSolver solver{"TspSolver", SolverSense::MINIMIZE};
 
   for (auto node : nodes)
   {
@@ -98,7 +98,7 @@ void milp_examples::travelling_salesman_problem(const std::vector<fuint32_t> &no
 
 namespace
 {
-  const fuint32_t amountNodes = 4;
+  const fuint32_t amountNodes = 6;
   std::vector<EdgeWithCost> createEdgeCostVec(const std::vector<fuint32_t>& nodes,
         const std::array<double, amountNodes * amountNodes> edgeCosts)
   {
@@ -120,13 +120,14 @@ namespace
 
 int main()
 {
-  std::vector<fuint32_t> nodes{0, 1, 2, 3};
+  std::vector<fuint32_t> nodes{0, 1, 2, 3, 4, 5};
   std::array<double, amountNodes*amountNodes> edgeCosts =
-  {
-      0, 4, 3, 2,
-      5, 0, 6, 3,
-      6, 1, 0, 3,
-      1, 3, 2, 0
+  {0, 4, 3, 2, 4, 5,
+   5, 0, 6, 3, 1, 3,
+   6, 1, 0, 3, 4, 2,
+   5, 3, 2, 0, 2, 5,
+   3, 5, 7, 2, 0, 4,
+   4, 6, 2, 4, 3, 0
   };
   auto edges = createEdgeCostVec(nodes, edgeCosts);
   milp_examples::travelling_salesman_problem(nodes, edges, 0);
