@@ -37,9 +37,23 @@ namespace scip_wrapper
     }
   }
 
-void SCIPLinearConstraint::addVariable(SCIP* scip, SCIPVariable &var, double coefficient)
+template<>
+void SCIPConstraint<true>::addVariable(SCIP* scip, SCIPVariable &var, double coefficient)
+{
+  SCIP_CALL_EXC(SCIPaddLinearVarQuadratic(scip, this->constraint, var.variable, coefficient));
+}
+
+
+template<>
+void SCIPConstraint<false>::addVariable(SCIP* scip, SCIPVariable &var, double coefficient)
 {
   SCIP_CALL_EXC(SCIPaddCoefLinear(scip, this->constraint, var.variable, coefficient));
+}
+
+template<>
+void SCIPConstraint<true>::addQuadratic(SCIP *scip, SCIPVariable &var1, SCIPVariable &var2, double coefficient)
+{
+  SCIP_CALL_EXC(SCIPaddBilinTermQuadratic(scip, this->constraint, var1.variable, var2.variable, coefficient));
 }
 
 
@@ -192,5 +206,153 @@ void MILPSolver::addToCst(fuint32_t cstIndex, fuint32_t varIndex, double coeffic
     throw std::range_error("Out of range in adding to constraint...");
 
   m_csts.at(cstIndex).addVariable(m_scip_model, m_variables.at(varIndex), coefficient);
+}
+
+
+/* ------------------------ QUBOSolver ------------------------ */
+
+QUBOSolver::QUBOSolver(SolverSense sense, double penalty)
+  : m_penalty(penalty), m_sense(sense), m_solution(nullptr)
+{
+  SCIP_CALL_EXC(SCIPcreate(&m_scip_model));
+  SCIP_CALL_EXC(SCIPincludeDefaultPlugins(m_scip_model));
+  SCIP_CALL_EXC(SCIPcreateProb(m_scip_model, "", NULL, NULL,NULL, NULL, NULL, NULL, NULL));
+  SCIP_CALL_EXC(SCIPsetObjsense(m_scip_model, getSCIPObjSense(sense)));
+
+  // create optimization variable
+  SCIP_CALL_EXC(SCIPcreateVar(m_scip_model, &m_targetVar.variable, "target",
+      NEG_INF, INF, 1.0, getSCIPVarType(CONTINUOUS), TRUE, FALSE,NULL, NULL, NULL, NULL, NULL));
+  SCIP_CALL_EXC(SCIPaddVar(m_scip_model, m_targetVar.variable));
+
+  // create constraint for optimization
+  SCIP_CALL_EXC(SCIPcreateConsBasicQuadratic(m_scip_model, &m_targetConstraint.constraint, "cst",
+    0, NULL, NULL, 0, NULL, NULL, NULL, m_sense == MINIMIZE ? NEG_INF : 0, m_sense == MINIMIZE ? 0 : INF));
+  SCIP_CALL_EXC(SCIPaddCons(m_scip_model, m_targetConstraint.constraint));
+
+  m_targetConstraint.addVariable(m_scip_model, m_targetVar, -1.0);
+}
+
+QUBOSolver::~QUBOSolver()
+{
+  try
+  {
+    if (m_scip_model == nullptr) return;
+
+    for (auto it = m_variables.begin(); it != m_variables.end(); ++it)
+    {
+      SCIP_CALL_EXC(SCIPreleaseVar(m_scip_model, &it->variable));
+    }
+    if (m_targetVar.variable != nullptr)
+    {
+      SCIP_CALL_EXC(SCIPreleaseVar(m_scip_model, &m_targetVar.variable));
+    }
+    if (m_targetConstraint.constraint != nullptr)
+    {
+      SCIP_CALL_EXC(SCIPreleaseCons(m_scip_model, &m_targetConstraint.constraint));
+    }
+    SCIP_CALL_EXC(SCIPfree(&m_scip_model));
+  }
+  catch(const std::exception& e)
+  {
+    std::cerr << "Error in destructor while trying to free SCIP variables/constraints/model: " << std::endl
+              << e.what() << std::endl;
+  }
+}
+
+
+bool QUBOSolver::solve()
+{
+  if(m_solution != nullptr) return true;
+  fillTargetConstraint();
+  SCIP_CALL_EXC(SCIPsolve(m_scip_model));
+  m_solution = SCIPgetBestSol(m_scip_model);
+  return m_solution != nullptr;
+}
+
+
+void QUBOSolver::fillTargetConstraint()
+{
+  for (auto coefficientIt = m_coefficients.begin(); coefficientIt != m_coefficients.end(); ++coefficientIt)
+  {
+    auto& varPair = coefficientIt->first;
+    auto coefficient = coefficientIt->second;
+    if (varPair.first == varPair.second)
+      m_targetConstraint.addVariable(m_scip_model, m_variables.at(varPair.first), coefficient);
+    else
+      m_targetConstraint.addQuadratic(m_scip_model, m_variables.at(varPair.first), m_variables.at(varPair.second), coefficient);
+  }
+}
+
+fuint32_t QUBOSolver::createBinaryVar()
+{
+  m_variables.push_back(SCIPVariable{});
+  SCIP_CALL_EXC(SCIPcreateVar(m_scip_model, &m_variables.back().variable, "",
+      0.0, 1.0, 0.0, getSCIPVarType(BINARY), TRUE, FALSE,NULL, NULL, NULL, NULL, NULL));
+
+  SCIP_CALL_EXC(SCIPaddVar(m_scip_model, m_variables.back().variable));
+  return m_variables.size() - 1;
+}
+
+bool QUBOSolver::getBinaryValue(fuint32_t x)
+{
+  if (m_solution == nullptr) throw std::runtime_error("Solution is nullptr...");
+  if (x >= m_variables.size()) throw std::range_error("Variable index out of range...");
+  return SCIPgetSolVal(m_scip_model, m_solution, m_variables.at(x).variable) > 0.5;
+}
+
+void QUBOSolver::addQuadraticTerm(fuint32_t x, fuint32_t y, double coefficient, bool withPenalty)
+{
+  auto it = m_coefficients.find(VariablePair(std::min(x, y), std::max(x, y)));
+  if (it == m_coefficients.end())
+  {
+    m_coefficients.insert(std::make_pair(VariablePair(std::min(x, y), std::max(x, y)),
+      coefficient * (withPenalty ? m_penalty : 1.0)));
+  }
+  else
+  {
+    it->second += coefficient * (withPenalty ? m_penalty : 1.0);
+  }
+}
+
+void QUBOSolver::addLinearTerm(fuint32_t x, double coefficient, bool withPenalty)
+{
+  addQuadraticTerm(x, x, coefficient, withPenalty);
+}
+
+void QUBOSolver::addImplicationTerm(fuint32_t x, fuint32_t y)
+{
+
+}
+
+void QUBOSolver::addNotEqualTerm(fuint32_t x, fuint32_t y)
+{
+
+}
+
+void QUBOSolver::addEqualityTerm(fuint32_t x, fuint32_t y)
+{
+
+}
+
+void QUBOSolver::addAndTerm(fuint32_t x, fuint32_t y)
+{
+
+}
+
+void QUBOSolver::addOrTerm(fuint32_t x, fuint32_t y)
+{
+
+}
+
+void QUBOSolver::addLeqTerm(fuint32_t x, fuint32_t y)
+{
+
+}
+
+void QUBOSolver::addGeqTerm(fuint32_t x, fuint32_t y)
+{ // P(1 - x - y + x*y)
+  addLinearTerm(x, -1.0, true);
+  addLinearTerm(y, -1.0, true);
+  addQuadraticTerm(x, y, 1.0, true);
 }
 }
