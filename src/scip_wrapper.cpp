@@ -324,14 +324,11 @@ void QUBOSolver::addImplicationTerm(fuint32_t x, fuint32_t y)
 
 }
 
-void QUBOSolver::addNotEqualTerm(fuint32_t x, fuint32_t y)
-{
-
-}
-
 void QUBOSolver::addEqualityTerm(fuint32_t x, fuint32_t y)
-{
-
+{ // x = y
+  addLinearTerm(x, 1.0, true);
+  addLinearTerm(y, 1.0, true);
+  addQuadraticTerm(x, y, -2.0, true);
 }
 
 void QUBOSolver::addAndTerm(fuint32_t x, fuint32_t y)
@@ -339,9 +336,16 @@ void QUBOSolver::addAndTerm(fuint32_t x, fuint32_t y)
 
 }
 
-void QUBOSolver::addOrTerm(fuint32_t x, fuint32_t y)
-{
+void QUBOSolver::addNandTerm(fuint32_t x, fuint32_t y)
+{ // x + y <= 1
+  addQuadraticTerm(x, y, 1.0, true);
+}
 
+void QUBOSolver::addXorTerm(fuint32_t x, fuint32_t y)
+{ // x + y = 1
+  addLinearTerm(x, -1.0, true);
+  addLinearTerm(y, -1.0, true);
+  addQuadraticTerm(x, y, 2.0, true);
 }
 
 void QUBOSolver::addLeqTerm(fuint32_t x, fuint32_t y)
@@ -354,5 +358,31 @@ void QUBOSolver::addGeqTerm(fuint32_t x, fuint32_t y)
   addLinearTerm(x, -1.0, true);
   addLinearTerm(y, -1.0, true);
   addQuadraticTerm(x, y, 1.0, true);
+}
+
+
+std::ostream& operator<<(std::ostream& os, const QUBOSolver& solver)
+{
+  os << "----------------------------------------" << std::endl;
+  os << solver.m_variables.size() << " binary variables defined." << std::endl;
+  os << solver.m_coefficients.size() << " used cells in the matrix. " << std::endl;
+  os << "Matrix Q:" << std::endl;
+  for (fuint32_t i = 0; i < solver.m_variables.size(); i++)
+  {
+    for (fuint32_t j = 0; j < solver.m_variables.size(); j++)
+    {
+      const auto it = solver.m_coefficients.find(std::make_pair(i, j));
+      if (it == solver.m_coefficients.end())
+      {
+        os << "0 ";
+      }
+      else
+      {
+        os << it->second << " ";
+      }
+    }
+    os << std::endl;
+  }
+  os << "----------------------------------------" << std::endl;
 }
 }

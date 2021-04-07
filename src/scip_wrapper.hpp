@@ -124,6 +124,7 @@ namespace scip_wrapper
     public:
       QUBOSolver(SolverSense sense, double penalty);
       ~QUBOSolver();
+      friend std::ostream& operator<<(std::ostream& os, const QUBOSolver& solver);
 
     public:
       bool solve();
@@ -133,10 +134,10 @@ namespace scip_wrapper
       void addLinearTerm(fuint32_t x, double coefficient = 1.0, bool withPenalty = false);
 
       void addImplicationTerm(fuint32_t x, fuint32_t y);
-      void addNotEqualTerm(fuint32_t x, fuint32_t y);
       void addEqualityTerm(fuint32_t x, fuint32_t y);
       void addAndTerm(fuint32_t x, fuint32_t y);
-      void addOrTerm(fuint32_t x, fuint32_t y);
+      void addNandTerm(fuint32_t x, fuint32_t y);
+      void addXorTerm(fuint32_t x, fuint32_t y);
       void addLeqTerm(fuint32_t x, fuint32_t y);
       void addGeqTerm(fuint32_t x, fuint32_t y);
 

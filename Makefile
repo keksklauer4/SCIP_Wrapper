@@ -13,9 +13,9 @@ milp   = chromatic_number  dependency_knapsack independent_set longest_path_cata
 milp_obj_files = chromatic_number.o dependency_knapsack.o independent_set.o longest_path_catan.o max_clique.o min_cost_flow.o min_team_matching.o	\
 						n_queens_completion.o rectangle_packing.o three_partition.o trivial_examples.o tsp.o vertex_cover.o weighted_max_cut.o
 
-qubo = qubo_vertex_cover
+qubo = qubo_vertex_cover qubo_chromatic_number
 
-qubo_obj_files = qubo_vertex_cover.o
+qubo_obj_files = qubo_vertex_cover.o qubo_chromatic_number.o
 
 
 all: $(milp) $(qubo)

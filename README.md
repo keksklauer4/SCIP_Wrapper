@@ -11,7 +11,7 @@ Apart from that do not forget to cite SCIP.
 
 ## Overview
 
-### Creating a minimal model
+### Creating a minimal model to solve MILPs using the MILPSolver
 ```C++
 #include "scip_wrapper.hpp"
 
@@ -68,6 +68,9 @@ Thus,
 
 ```make <name>``` for specific examples (```<name>``` could be ```chromatic number```, ```tsp``` etc.)
 
+To build the ```qubo``` examples can be built using:
+```make qubo_<name>``` (example: ```make qubo_vertex_cover``` to build the qubo example for the minimum cost vertex cover problem)
+
 ## Examples using the MILPSolver
 I wrote some examples for how to use the wrapper:
 - [Independent set](https://github.com/keksklauer4/SCIP_Wrapper/blob/master/examples/milp_examples/independent_set.cpp): Find the maximum independent set in a graph using a MILP.
@@ -78,13 +81,14 @@ I wrote some examples for how to use the wrapper:
 - [TSP](https://github.com/keksklauer4/SCIP_Wrapper/blob/master/examples/milp_examples/tsp.cpp): The general travelling salesman problem as an ILP as formulated by Miller,Tucker and Zemlin. For an explanation, see the [Wikipedia article](https://en.wikipedia.org/wiki/Travelling_salesman_problem#Integer_linear_programming_formulations).
 - [minimum team matching](https://github.com/keksklauer4/SCIP_Wrapper/blob/master/examples/milp_examples/min_team_matching.cpp): This is a problem I found on Reddit. It is about forming teams with at least 3 and at most 5 members while minimizing costs. It turns out this problem is strongly NP-hard which I showed exemplarily through a reduction from [3-Partition](https://en.wikipedia.org/wiki/3-partition_problem). The reduction is implemented in the same file and two example problem instances of the 3-partition problem are solved using the reduction (both taken from Wikipedia).
 - [Longest Path bounded degree 3](https://github.com/keksklauer4/SCIP_Wrapper/blob/master/examples/milp_examples/longest_path_catan.cpp): It's about finding the longest edge disjoint path in a cyclic graph with maximum degree of 3. A vertex can be travelled to multiple times (trivially, at most twice). Start and end vertices are not predefined. The problem is motivated by a board game, [Siedler von Catan](https://www.catan.de/), in which one gets points for the longest trade route. Btw. I am not sure whether this problem is NP-hard (probably it is).
-- [Max Clique](https://github.com/keksklauer4/SCIP_Wrapper/blob/master/examples/milp_examples/max_clique.cpp): Find a maximum cardinality subset of vertices that are mutually adjacent. The problem is NP-hard and the decision version is among Karp's 21 NP-complete problems. The reduction from 3SAT to max clique is quite elegant.
-- [Chromatic number](https://github.com/keksklauer4/SCIP_Wrapper/blob/master/examples/milp_examples/chromatic_number.cpp): Find the minimum number of distinct colors needed to color each vertex with adjacent vertices being colored using distinct colors. The problem is NP-hard as well and is just as max clique among Karp's 21 problems proven to be NP-complete.
+- [Max Clique](https://github.com/keksklauer4/SCIP_Wrapper/blob/master/examples/milp_examples/max_clique.cpp): Find a maximum cardinality subset of vertices that are mutually adjacent. The problem is NP-hard and the decision version is among [Karp's 21 NP-complete problems](https://en.wikipedia.org/wiki/Karp%27s_21_NP-complete_problems). The reduction from 3SAT to max clique is quite elegant.
+- [Chromatic number](https://github.com/keksklauer4/SCIP_Wrapper/blob/master/examples/milp_examples/chromatic_number.cpp): Find the minimum number of distinct colors needed to color each vertex with adjacent vertices being colored using distinct colors. The problem is NP-hard as well and is just as max clique among [Karp's 21 problems](https://en.wikipedia.org/wiki/Karp%27s_21_NP-complete_problems) proven to be NP-complete.
 - [3-Partition](https://github.com/keksklauer4/SCIP_Wrapper/blob/master/examples/milp_examples/three_partition.cpp): Given a multiset of ```n = 3*m``` integers, summing to ```t*m```, find ```m``` triplets ```S_1, ..., S_m``` with mutually distinct elements that each sum to ```t```. Trivially, every element in the multiset is in exactly one triplet. The problem is strongly NP-hard and is pretty useful with regard to reductions to 3-dimensional matching and tripartite matching.
 - [Maximum weighted cut](https://github.com/keksklauer4/SCIP_Wrapper/blob/master/examples/milp_examples/weighted_max_cut.cpp): Partition a given graph with capacities on edges such that the sum of capacities of edges cut by the partition (edges between vertices in distinct sets of the partitioning) is maximized. The problem is NP-hard.
 - [2D rectangle packing](https://github.com/keksklauer4/SCIP_Wrapper/blob/master/examples/milp_examples/rectangle_packing.cpp): Given a parent rectangle and a list of child rectangles, try to make use of as much area of the parent are by fitting non-overlapping child rectangles into the parent rectangle. Each child rectangle can only be used once and cannot be cut or changed (in this case not rotated either). The problem is NP-hard.
 
 ## Examples using the QUBOSolver
-Note that the ```QUBOSolver``` is not thoroughly tested. Apart from that, a lot of helper functionality must be added to really make use of the solver.
+Note that the ```QUBOSolver``` is not thoroughly tested. Apart from that, a lot of helper functionality must be added to really make use of the solver. A godd explanation on how to formulate QUBOs can be found [here](https://arxiv.org/ftp/arxiv/papers/1811/1811.11538.pdf). Note that this wrapper models the qubo as an optimization with a linear objective function with exactly one quadratic constraint that is equivalent to ```x^T Q x```.
 The following examples exist:
 - [Minimum Vertex Cover](https://github.com/keksklauer4/SCIP_Wrapper/blob/master/examples/qubo_examples/qubo_vertex_cover.cpp): As explained above, find a subset of vertices covering each edge while minimizing costs.
+- [K-colorability](https://github.com/keksklauer4/SCIP_Wrapper/blob/master/examples/qubo_examples/qubo_chromatic_number.cpp): Color a graph using at most ```k``` colors with adjacent nodes being colored differently.
